@@ -11,8 +11,9 @@ from PIL import Image
 # import os
 # os.environ["CUDA_VISIBLE_DEVICES"] = "1,2"
 
-# model_dir = snapshot_download('ZhipuAI/glm-4v-9b')
-model_dir = snapshot_download('qwen/Qwen-VL-Chat')
+# 下载模型(本地)
+model_dir = snapshot_download('qwen/Qwen-VL-Chat', cache_dir='E:\LLM-exclusive')
+
 device = "auto"
 tokenizer = AutoTokenizer.from_pretrained(model_dir, trust_remote_code=True)
 qwen_vl = AutoModelForCausalLM.from_pretrained(model_dir, device_map=device, trust_remote_code=True, fp16=True).eval()
@@ -38,7 +39,8 @@ def generate_text(model: str, messages: list, max_tokens: int, temperature: floa
         {'image': image_url},  # Either a local path or an url
         {'text': text}
     ])
-    response, history = qwen_vl.chat(tokenizer, query=query, history=None, max_new_tokens=max_tokens)
+    response, history = qwen_vl.chat(tokenizer, query=query, history=None, max_new_tokens=max_tokens,
+                                     temperature=temperature)
     return response
 
 
